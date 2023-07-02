@@ -125,6 +125,11 @@
 - name: Flush handlers after deployment
   ansible.builtin.meta: flush_handlers
 
+- name: Ensure that node_exporter is started
+  ansible.builtin.systemd:
+    name: node_exporter
+    state: started
+
 - name: Verify that node_exporter URL is accessible
   ansible.builtin.uri:
     url: "http://{{ node_exporter_web_listen_address }}:{{ node_exporter_listen_port }}"
@@ -133,4 +138,3 @@
   retries: 5
   delay: 5
   until: node_exporter_verify_url_status_code.status == 200
-
