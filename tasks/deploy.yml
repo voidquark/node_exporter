@@ -8,6 +8,7 @@
         url: "https://api.github.com/repos/prometheus/node_exporter/releases/latest"
         method: GET
         body_format: json
+      become: false
       delegate_to: localhost
       run_once: true
       register: __github_latest_version
