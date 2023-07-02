@@ -9,9 +9,9 @@ This role provides a straightforward way to deploy Node Exporter across systems 
 - **Uninstall:** This scenario ensures that everything deployed by the role is removed and cleaned up (`uninstall`). It removes Node Exporter from the target system.
 
 **Role Key feature**:
-- Easy Installation/Uninstall: The role simplifies the installation and uninstallation processes for Node Exporter, making it quick and hassle-free.
-- Customizable Configuration: The role provides various configuration options that can be customized according to your needs. This allows you to tailor the deployment of Node Exporter to suit your specific requirements.
-- Version Flexibility: Allowing users to set the version to either “latest” or a specific version like “1.6.0”. This simple and intuitive feature empowers users to easily control the Node Exporter version according to their deployment requirements.
+- **Easy Installation/Uninstall**: The role simplifies the installation and uninstallation processes for Node Exporter, making it quick and hassle-free.
+- **Customizable Configuration**: The role provides various configuration options that can be customized according to your needs. This allows you to tailor the deployment of Node Exporter to suit your specific requirements.
+- **Version Flexibility**: Allowing users to set the version to either “latest” or a specific version like “1.6.0”. This simple and intuitive feature empowers users to easily control the Node Exporter version according to their deployment requirements.
 
 ## Requirements
 
