@@ -1,0 +1,10 @@
+---
+# tasks file for node_exporter
+- name: Deploy node_exporter service
+  ansible.builtin.include_tasks: deploy.yml
+  when: state|default('present') == 'present'
+
+- name: Uninstall node_exporter service
+  ansible.builtin.include_tasks: uninstall.yml
+  when: state|default('present') == 'absent'
+

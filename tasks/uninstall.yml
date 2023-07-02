@@ -1,0 +1,43 @@
+---
+# tasks file for node_exporter uninstall
+
+- name: Stop node_exporter service
+  ansible.builtin.systemd: # noqa ignore-errors
+    name: node_exporter.service
+    state: stopped
+  ignore_errors: true
+
+- name: Remove node_exporter binary and systemd unit"
+  ansible.builtin.file:
+    path: "{{ remove_me }}"
+    state: absent
+  loop:
+    - "{{ node_exporter_binary_path }}/node_exporter"
+    - "/etc/systemd/system/node_exporter.service"
+  loop_control:
+    loop_var: remove_me
+
+- name: Remove node_exporter textfile dir"
+  ansible.builtin.file:
+    path: "{{ node_exporter_textfile_path }}"
+    state: absent
+  when: node_exporter_textfile_path is defined
+
+- name: Remove the node_exporter system user
+  ansible.builtin.user:
+    name: "{{ node_exporter_user }}"
+    force: true
+    state: absent
+
+- name: Remove node_exporter system group
+  ansible.builtin.group:
+    name: "{{ node_exporter_group  }}"
+    state: absent
+
+- name: Disable firewalld port
+  ansible.posix.firewalld:
+    permanent: true
+    immediate: true
+    port: "{{ node_exporter_listen_port }}/tcp"
+    state: disabled
+

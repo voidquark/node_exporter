@@ -1,0 +1,135 @@
+---
+# tasks file for node_exporter deploy
+
+- name: Obtain latest version from node_exporter Github repo
+  block:
+    - name: Scrape Github API endpoint to obtain latest node_exporter version
+      ansible.builtin.uri:
+        url: "https://api.github.com/repos/prometheus/node_exporter/releases/latest"
+        method: GET
+        body_format: json
+      delegate_to: localhost
+      run_once: true
+      register: __github_latest_version
+
+    - name: Latest available node_exporter version
+      ansible.builtin.set_fact:
+        node_exporter_version: "{{ __github_latest_version.json.tag_name | regex_replace('^v?(\\d+\\.\\d+\\.\\d+)$', '\\1') }}"
+  when: node_exporter_version == "latest"
+
+- name: Verify current deployed version
+  block:
+    - name: Check if node_exporter binary is present
+      ansible.builtin.stat:
+        path: "{{ node_exporter_binary_path }}/node_exporter"
+      register: __already_deployed
+
+    - name: Obtain current deployed node_exporter version
+      ansible.builtin.command:
+        cmd: "{{ node_exporter_binary_path }}/node_exporter --version"
+      changed_when: false
+      register: __current_deployed_version
+      when: __already_deployed.stat.exists | bool
+
+- name: Create node_exporter system group
+  ansible.builtin.group:
+    name: "{{ node_exporter_group  }}"
+    system: true
+    state: present
+
+- name: Create the node_exporter system user
+  ansible.builtin.user:
+    name: "{{ node_exporter_user }}"
+    group: "{{ node_exporter_group  }}"
+    shell: "/sbin/nologin"
+    system: true
+    create_home: false
+    state: present
+
+- name: Create textfile dir
+  ansible.builtin.file:
+    path: "{{ node_exporter_textfile_path }}"
+    state: directory
+    mode: "0755"
+  when: node_exporter_textfile_path is defined
+
+- name: Download Block
+  block:
+    - name: Create temp dir for node_exporter deployment
+      ansible.builtin.tempfile:
+        path: "/tmp"
+        suffix: node_exporter
+        state: directory
+      register: __tempfolder
+
+    - name: Download node_exporter archive from remote URL
+      ansible.builtin.get_url:
+        url: "{{ node_exporter_download_url }}"
+        dest: "{{ __tempfolder.path }}"
+        mode: "0750"
+        owner: "{{ node_exporter_user }}"
+        group: "{{ node_exporter_group }}"
+
+    - name: Unarchive node_exporter binary to /tmp
+      ansible.builtin.unarchive:
+        remote_src: true
+        src: "{{ __tempfolder.path }}/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}.tar.gz"
+        dest: "{{ __tempfolder.path }}"
+        creates: "{{ __tempfolder.path }}/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}/node_exporter"
+        owner: "{{ node_exporter_user }}"
+        group: "{{ node_exporter_group }}"
+
+    - name: Copy node_exporter binary from /tmp to "{{ node_exporter_binary_path }}"
+      ansible.builtin.copy:
+        src: "{{ __tempfolder.path }}/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}/node_exporter"
+        dest: "{{ node_exporter_binary_path }}"
+        mode: "0750"
+        owner: "{{ node_exporter_user }}"
+        group: "{{ node_exporter_group }}"
+        remote_src: true
+      notify: restart node_exporter
+
+  always:
+    - name: Remove temp dir
+      ansible.builtin.file:
+        path: "{{ __tempfolder.path }}"
+        state: absent
+  when: __current_deployed_version.stdout is not defined or node_exporter_version not in __current_deployed_version.stdout
+
+- name: Template node_exporter systemd unit file
+  ansible.builtin.template:
+    src: node_exporter.service.j2
+    dest: "/etc/systemd/system/node_exporter.service"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  notify: restart node_exporter
+
+- name: Enable firewalld rule to expose node_exporter port
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    port: "{{ node_exporter_listen_port }}/tcp"
+    state: enabled
+  when: node_exporter_expose_port | bool
+
+- name: Ensure that node_exporter firewalld rule is not present
+  ansible.posix.firewalld:
+    immediate: true
+    permanent: true
+    port: "{{ node_exporter_listen_port }}/tcp"
+    state: disabled
+  when: not node_exporter_expose_port | bool
+
+- name: Flush handlers after deployment
+  ansible.builtin.meta: flush_handlers
+
+- name: Verify that node_exporter URL is accessible
+  ansible.builtin.uri:
+    url: "http://{{ node_exporter_web_listen_address }}:{{ node_exporter_listen_port }}"
+    method: GET
+  register: node_exporter_verify_url_status_code
+  retries: 5
+  delay: 5
+  until: node_exporter_verify_url_status_code.status == 200
+

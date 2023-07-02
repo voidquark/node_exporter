@@ -1,0 +1,18 @@
+---
+# defaults file for node_exporter
+node_exporter_version: "latest"
+node_exporter_download_url: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}.tar.gz"
+node_exporter_binary_path: "/usr/local/bin"
+node_exporter_user: "node_exporter"
+node_exporter_group: "node_exporter"
+node_exporter_web_listen_address: "0.0.0.0"
+node_exporter_listen_port: 9100
+node_exporter_arch: "amd64"
+node_exporter_expose_port: true
+
+# group_vars or host_vars
+# node_exporter_textfile_path: "/var/lib/node_exporter"
+# node_exporter_runtime_flags:
+#   - "--collector.textfile.directory {{ node_exporter_textfile_path }}"
+#   - "--collector.systemd"
+#   - "--collector.network_route"

@@ -1,0 +1,23 @@
+[Unit]
+Description=Node Exporter
+Wants=network-online.target
+After=network-online.target
+
+
+[Service]
+User={{ node_exporter_user }}
+Group={{ node_exporter_group }}
+Type=simple
+Restart=always
+{% if node_exporter_runtime_flags is defined %}
+ExecStart={{ node_exporter_binary_path }}/node_exporter \
+{% for flag in node_exporter_runtime_flags %}
+  {{ flag }} \
+{% endfor %}
+  --web.listen-address={{ node_exporter_web_listen_address }}:{{ node_exporter_listen_port }}
+{% else %}
+ExecStart={{ node_exporter_binary_path }}/node_exporter --web.listen-address={{ node_exporter_web_listen_address }}:{{ node_exporter_listen_port }}
+{% endif %}
+
+[Install]
+WantedBy=multi-user.target
