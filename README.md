@@ -1,5 +1,7 @@
 # Ansible role - Node Exporter
 
+[![License](https://img.shields.io/github/license/voidquark/node_exporter)](LICENSE)
+
 Node Exporter role is designed to simplify the installation and configuration of Node Exporter on various Linux distributions. [Node Exporter](https://github.com/prometheus/node_exporter) is a popular Prometheus exporter that collects hardware and operating system metrics from Linux systems.
 
 This role provides a straightforward way to deploy Node Exporter across systems from the Red Hat Enterprise Linux (RHEL) family, including `RHEL 8`, `RHEL 9`, `Rocky Linux`, `Alma Linux`, `CentOS`, and `Fedora`. It has been tested extensively on `RHEL 8` and `RHEL 9`, ensuring compatibility and reliability.
