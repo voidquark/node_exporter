@@ -1,6 +1,6 @@
 # Ansible role - Node Exporter
 
-[![License](https://img.shields.io/github/license/voidquark/node_exporter)](LICENSE)
+![GitHub](https://img.shields.io/github/license/voidquark/node_exporter)
 
 Node Exporter role is designed to simplify the installation and configuration of Node Exporter on various Linux distributions. [Node Exporter](https://github.com/prometheus/node_exporter) is a popular Prometheus exporter that collects hardware and operating system metrics from Linux systems.
 
