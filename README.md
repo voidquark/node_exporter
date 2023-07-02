@@ -31,14 +31,14 @@ No requirements
 | `node_exporter_listen_port` | `9100` | The TCP port on which Node Exporter listens for incoming connections. By default, it listens on port `9100`.
 | `node_exporter_expose_port` | `true` | Set to `true` by default, controls whether to add a firewalld rule for exposing the Node Exporter port. When `true`, a firewalld rule is added to allow inbound traffic on the specified Node Exporter port. Set to `false` to ensure that firewalld rule is not present.
 | `node_exporter_arch` | `"amd64"` | The architecture of the Linux system for which Node Exporter is being deployed.
-| `node_exporter_download_url` | `"https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-{{ node_exporter_arch }}.tar.gz"` | The default download URL for the Node Exporter package from GitHub.
+| `node_exporter_download_url` | `"https://github.com/prometheus/node_exporter/`<br>`releases/download/v{{ node_exporter_version }}/node_exporter-`<br>`{{ node_exporter_version }}.linux-{{ node_exporter_arch }}.tar.gz"` | The default download URL for the Node Exporter package from GitHub.
 
 - **group_vars** or **host_vars** variables.
 
 | Variable Name | Example Usage | Required | Description
 | ----------- | ----------- | ----------- | ----------- |
 | `node_exporter_runtime_flags` | <pre>node_exporter_runtime_flags:<br>&emsp;- "--collector.textfile.directory {{ node_exporter_textfile_path }}"<br>&emsp;- "--collector.systemd"<br>&emsp;- "--collector.network_route"</pre> | No | Optional execution flags injected into the systemd unit file for Node Exporter. You can refer to the official [node exporter Github repo](https://github.com/prometheus/node_exporter) to obtain a list of available collectors.
-| `node_exporter_textfile_path` | `"/var/lib/node_exporter"` | NO(only when runtime flag is defined) | If you define the `--collector.textfile.directory` flag in the `node_exporter_runtime_flags` variable, it is required to specify the directory path. By default, the directory is not created. The [textfile collector](https://www.robustperception.io/using-the-textfile-collector-from-a-shell-script/#more-4014) serves a specific purpose as explained in the provided link.
+| `node_exporter_textfile_path` | `"/var/lib/node_exporter"` | NO(required when runtime flag textfile is defined) | If you define the `--collector.textfile.directory` flag in the `node_exporter_runtime_flags` variable, it is required to specify the directory path. By default, the directory is not created. The [textfile collector](https://www.robustperception.io/using-the-textfile-collector-from-a-shell-script/#more-4014) serves a specific purpose as explained in the provided link.
 
 ## Dependencies
 
