@@ -48,7 +48,7 @@ No requirements
 
 No Dependencies
 
-## Example Playbook
+## Deployment and Uninstall Playbook
 
 - Deployment playbook (`function_node-exporter_deploy.yml`)
 ```yaml
@@ -72,7 +72,7 @@ No Dependencies
       state: absent
 ```
 
-## Example execution
+## Example Execution
 
 - Deployment playbook
 ```yaml
