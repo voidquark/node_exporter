@@ -35,7 +35,7 @@ No requirements
 | `node_exporter_listen_port` | `9100` | The TCP port on which Node Exporter listens for incoming connections. By default, it listens on port `9100`.
 | `node_exporter_expose_port` | `true` | Set to `true` by default, controls whether to add a firewalld rule for exposing the Node Exporter port. When `true`, a firewalld rule is added to allow inbound traffic on the specified Node Exporter port. Set to `false` to ensure that firewalld rule is not present.
 | `node_exporter_arch` | `"amd64"` | The architecture of the Linux system for which Node Exporter is being deployed.
-| `node_exporter_download_url` | `"https://github.com/prometheus/node_exporter/`<br>`releases/download/v{{ node_exporter_version }}/node_exporter-`<br>`{{ node_exporter_version }}.linux-{{ node_exporter_arch }}.tar.gz"` | The default download URL for the Node Exporter package from GitHub.
+| `node_exporter_download_url` | <pre>https://github.com/prometheus/<br>node_exporter/releases/download/<br>v{{ node_exporter_version }}/node_exporter-<br>{{ node_exporter_version }}.linux-<br>{{ node_exporter_arch }}.tar.gz</pre> | The default download URL for the Node Exporter package from GitHub.
 
 - **group_vars** or **host_vars** variables.
 
