@@ -15,7 +15,7 @@ This role provides a straightforward way to deploy Node Exporter across systems 
 - **Customizable Configuration**: The role provides various configuration options that can be customized according to your needs. This allows you to tailor the deployment of Node Exporter to suit your specific requirements.
 - **Version Flexibility**: Allowing users to set the version to either “latest” or a specific version like “1.6.0”. This simple and intuitive feature empowers users to easily control the Node Exporter version according to their deployment requirements.
 
-📢 **[Check the blog post](https://voidquark.com/simplify-node-exporter-deployment-with-ansible/)** 📝 **Experience a step-by-step demo of deploying and uninstalling Node Exporter using my Ansible role.**
+📢 **[Check the blog post](https://voidquark.com/blog/simplify-node-exporter-deployment-with-ansible/)** 📝 **Experience a step-by-step demo of deploying and uninstalling Node Exporter using my Ansible role.**
 
 ## Requirements
 
