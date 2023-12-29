@@ -111,7 +111,6 @@
     name: "firewalld"
   register: __firewalld_service_state
 
-
 - name: Enable firewalld rule to expose node_exporter port
   ansible.posix.firewalld:
     immediate: true
