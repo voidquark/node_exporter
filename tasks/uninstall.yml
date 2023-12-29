@@ -40,4 +40,4 @@
     immediate: true
     port: "{{ node_exporter_listen_port }}/tcp"
     state: disabled
-
+  ignore_errors: true
