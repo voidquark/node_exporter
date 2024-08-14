@@ -57,7 +57,7 @@ No Dependencies
   gather_facts: false
   become: true
   roles:
-    - role: node_exporter
+    - role: voidquark.node_exporter
       state: present
 ```
 
@@ -68,7 +68,7 @@ No Dependencies
   gather_facts: false
   become: true
   roles:
-    - role: node_exporter
+    - role: voidquark.node_exporter
       state: absent
 ```
 
@@ -92,9 +92,7 @@ Here is an example of how you can organize your files using a directory structur
 ansible_structure
 ├── automation
 │   ├── function_node-exporter_deploy.yml # Deployment playbook
-│   ├── function_node-exporter_uninstall.yml # Uninstall playbook
-│   └── roles # Clone this role in to this dir.
-│       └── node_exporter
+│   └── function_node-exporter_uninstall.yml # Uninstall playbook
 └── inventory
     ├── group_vars
     │   └── node_exporter
