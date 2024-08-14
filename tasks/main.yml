@@ -7,4 +7,3 @@
 - name: Uninstall node_exporter service
   ansible.builtin.include_tasks: uninstall.yml
   when: state|default('present') == 'absent'
-

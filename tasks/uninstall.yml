@@ -2,7 +2,7 @@
 # tasks file for node_exporter uninstall
 
 - name: Stop node_exporter service
-  ansible.builtin.systemd: # noqa ignore-errors
+  ansible.builtin.systemd: #  noqa ignore-errors
     name: node_exporter.service
     state: stopped
   ignore_errors: true
