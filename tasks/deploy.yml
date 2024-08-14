@@ -2,6 +2,7 @@
 # tasks file for node_exporter deploy
 
 - name: Obtain latest version from node_exporter Github repo
+  when: node_exporter_version == "latest"
   block:
     - name: Scrape Github API endpoint to obtain latest node_exporter version
       ansible.builtin.uri:
@@ -16,7 +17,6 @@
     - name: Latest available node_exporter version
       ansible.builtin.set_fact:
         node_exporter_version: "{{ __github_latest_version.json.tag_name | regex_replace('^v?(\\d+\\.\\d+\\.\\d+)$', '\\1') }}"
-  when: node_exporter_version == "latest"
 
 - name: Verify current deployed version
   block:
@@ -34,14 +34,14 @@
 
 - name: Create node_exporter system group
   ansible.builtin.group:
-    name: "{{ node_exporter_group  }}"
+    name: "{{ node_exporter_group }}"
     system: true
     state: present
 
 - name: Create the node_exporter system user
   ansible.builtin.user:
     name: "{{ node_exporter_user }}"
-    group: "{{ node_exporter_group  }}"
+    group: "{{ node_exporter_group }}"
     shell: "/sbin/nologin"
     system: true
     create_home: false
@@ -55,6 +55,7 @@
   when: node_exporter_textfile_path is defined
 
 - name: Download Block
+  when: __current_deployed_version.stdout is not defined or node_exporter_version not in __current_deployed_version.stdout
   block:
     - name: Create temp dir for node_exporter deployment
       ansible.builtin.tempfile:
@@ -95,7 +96,6 @@
       ansible.builtin.file:
         path: "{{ __tempfolder.path }}"
         state: absent
-  when: __current_deployed_version.stdout is not defined or node_exporter_version not in __current_deployed_version.stdout
 
 - name: Template node_exporter systemd unit file
   ansible.builtin.template:
